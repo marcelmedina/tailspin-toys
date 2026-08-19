@@ -9,6 +9,14 @@ applyTo: '**/*.astro'
 
 Astro handles everything in the UI: pages, layouts, components, routing, and content. The site is **fully prerendered** (`output: 'static'`) — there is no client-side UI framework and no separate API server. Pages read data **directly in frontmatter** at build time via the Drizzle/Node SQLite data-access helpers in `src/lib/`.
 
+## Comment and Documentation Standards
+
+- Comment **intent and rationale** for non-obvious choices; do not restate obvious markup or scripting.
+- Remove outdated comments when changing related components.
+- Reusable components must document their `Props` contract in frontmatter:
+  - add a TSDoc/JSDoc block on the `Props` interface
+  - describe each prop with `@property` so usage is self-explanatory
+
 ### Component Structure
 
 ```astro
