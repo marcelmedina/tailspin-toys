@@ -1,6 +1,42 @@
 import { test, expect, type Response } from '@playwright/test';
 
 test.describe('Game Listing and Navigation', () => {
+  test('should filter games by category and publisher combination', async ({ page }) => {
+    let selectedCategoryName = '';
+    let selectedPublisherName = '';
+
+    await test.step('Navigate to homepage and capture a real category/publisher combination', async () => {
+      await page.goto('/');
+      await expect(page.getByTestId('games-grid')).toBeVisible();
+
+      const firstGame = page.getByTestId('game-card').first();
+      selectedCategoryName = (await firstGame.getByTestId('game-category').first().textContent())?.trim() ?? '';
+      selectedPublisherName = (await firstGame.getByTestId('game-publisher').first().textContent())?.trim() ?? '';
+
+      expect(selectedCategoryName).not.toBe('');
+      expect(selectedPublisherName).not.toBe('');
+
+      const categoryFilter = page
+        .locator('[data-testid="category-filter-label"]')
+        .filter({ hasText: selectedCategoryName })
+        .locator('input');
+      const publisherFilter = page.getByTestId('publisher-filter');
+
+      await categoryFilter.check();
+      await publisherFilter.selectOption({ label: selectedPublisherName });
+      await page.getByTestId('apply-filters-button').click();
+    });
+
+    await test.step('Verify the filtered results match the selected category and publisher', async () => {
+      const filteredGames = page.getByTestId('game-card');
+      await expect(filteredGames.first()).toBeVisible();
+
+      const firstFilteredGameText = await filteredGames.first().textContent();
+      expect(firstFilteredGameText).toContain(selectedCategoryName);
+      expect(firstFilteredGameText).toContain(selectedPublisherName);
+    });
+  });
+
   test('should display games with titles on index page', async ({ page }) => {
     await test.step('Navigate to homepage', async () => {
       await page.goto('/');

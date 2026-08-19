@@ -12,7 +12,7 @@ This is a single Astro application (Astro 7 + Drizzle ORM/Node SQLite). All comm
 ## Quick Reference
 
 | Test Suite | Command | When to Use |
-|------------|----------------------------|-------------|
+| --- | --- | --- |
 | Unit tests (Vitest) | `npm run test:unit` | After any data-layer / transform / helper change |
 | Frontend E2E tests (Playwright) | `npm run test:e2e` | After any UI / page / component change |
 | Lint (ESLint) | `npm run lint` | After any TypeScript or Astro change |
