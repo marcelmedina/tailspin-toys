@@ -287,7 +287,7 @@ async function startServer(instanceId) {
                 try {
                     const data = JSON.parse(body);
                     pendingIssues.set(instanceId, data);
-                } catch {}
+                } catch { /* ignore parse errors — respond 200 regardless */ }
                 res.writeHead(200, { "Content-Type": "application/json" });
                 res.end(JSON.stringify({ ok: true }));
             });
@@ -304,7 +304,7 @@ async function startServer(instanceId) {
     return { server, url: `http://127.0.0.1:${port}/` };
 }
 
-const session = await joinSession({
+await joinSession({
     canvases: [
         createCanvas({
             id: "issue-kanban",
@@ -335,7 +335,7 @@ const session = await joinSession({
                 {
                     name: "refresh",
                     description: "Re-fetch issues from GitHub and update the Kanban board.",
-                    handler: async (ctx) => {
+                    handler: async (_ctx) => {
                         cachedIssues = await fetchIssues();
                         return { ok: true, count: cachedIssues.length };
                     },
